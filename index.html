@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind&Code - Estado de Candidatura</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .logo span {
+            color: #647d00;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 300;
+        }
+
+        .search-section {
+            background: #fafafa;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .search-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            text-align: center;
+            color: #1a1a1a;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #647d00;
+        }
+
+        .search-btn {
+            padding: 16px 32px;
+            background: #647d00;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-btn:hover {
+            background: #4a5f00;
+            transform: translateY(-1px);
+        }
+
+        .search-hint {
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .results-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .candidate-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid #e8e8e8;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .candidate-header {
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+        }
+
+        .candidate-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .candidate-email {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .status-section {
+            margin-bottom: 32px;
+        }
+
+        .status-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #888;
+            margin-bottom: 12px;
+        }
+
+        .current-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 24px;
+            background: #647d00;
+            color: white;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .process-section {
+            margin-top: 32px;
+        }
+
+        .process-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 0;
+            position: relative;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 40px;
+            bottom: -16px;
+            width: 2px;
+            background: #e0e0e0;
+        }
+
+        .timeline-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            border: 3px solid #f5f5f5;
+            flex-shrink: 0;
+            margin-top: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item.completed .timeline-dot {
+            background: #647d00;
+            border-color: #e8f0d0;
+        }
+
+        .timeline-item.active .timeline-dot {
+            background: #647d00;
+            border-color: #647d00;
+            box-shadow: 0 0 0 4px rgba(100, 125, 0, 0.2);
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+
+        .timeline-item.active .timeline-title {
+            color: #647d00;
+        }
+
+        .timeline-desc {
+            font-size: 0.875rem;
+            color: #888;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f0f0f0;
+            border-top-color: #647d00;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid #f0f0f0;
+            color: #888;
+            font-size: 0.875rem;
+        }
+
+        .footer a {
+            color: #647d00;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 16px;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .search-section {
+                padding: 24px;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .candidate-card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">mind<span>&</span>code</div>
+            <p class="tagline">Consultora de Talentos Digitales</p>
+        </header>
+
+        <section class="search-section">
+            <h2 class="search-title">Consulta el estado de tu candidatura</h2>
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="searchInput" 
+                    placeholder="Ingresa tu nombre completo o email..."
+                    autocomplete="off"
+                >
+                <button class="search-btn" onclick="searchCandidate()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    Buscar
+                </button>
+            </div>
+            <p class="search-hint">Ingresa el mismo nombre o email que usaste en tu postulación</p>
+        </section>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Buscando en nuestra base de datos...</p>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            No encontramos tu candidatura. Verifica que el nombre o email sean correctos.
+        </div>
+
+        <section class="results-section" id="resultsSection">
+            <div class="candidate-card">
+                <div class="candidate-header">
+                    <h3 class="candidate-name" id="candidateName"></h3>
+                    <p class="candidate-email" id="candidateEmail"></p>
+                </div>
+
+                <div class="status-section">
+                    <p class="status-label">Estado Actual</p>
+                    <div class="current-status" id="currentStatus">
+                        <span class="status-dot"></span>
+                        <span id="statusText"></span>
+                    </div>
+                </div>
+
+                <div class="process-section">
+                    <h4 class="process-title">Proceso de Selección</h4>
+                    <div class="timeline" id="timeline"></div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>¿Tienes dudas? Escríbenos a <a href="mailto:talento@mindandcode.com">talento@mindandcode.com</a></p>
+            <p style="margin-top: 8px;">© 2024 Mind&Code. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <script>
+        const PROCESS_STEPS = [
+            { id: 'abierto', label: 'Abierto', desc: 'CV recibido y en revisión inicial' },
+            { id: 'primera', label: 'Primera Entrevista', desc: 'Entrevista con RRHH' },
+            { id: 'segunda', label: 'Segunda Entrevista', desc: 'Entrevista técnica o con líder' },
+            { id: 'tercera', label: 'Tercera Entrevista', desc: 'Entrevista final o con cliente' },
+            { id: 'cerrado', label: 'Proceso Cerrado', desc: 'Proceso finalizado' }
+        ];
+
+        const STATUS_MAP = {
+            'abierto': 'Abierto',
+            'primera entrevista': 'Primera Entrevista',
+            'segunda entrevista': 'Segunda Entrevista',
+            'tercera entrevista': 'Tercera Entrevista',
+            'proceso cerrado': 'Proceso Cerrado',
+            'contratado': 'Proceso Cerrado',
+            'no apto': 'Proceso Cerrado',
+            'no apto': 'Proceso Cerrado',
+            'nuevo': 'Abierto',
+            'contactado': 'Primera Entrevista'
+        };
+
+        // Datos de ejemplo - REEMPLAZAR con tu Google Sheets
+        let candidatesData = [
+            { id: '1', nombre: 'Juan Pérez', email: 'juan@email.com', estado: 'Primera Entrevista' },
+            { id: '2', nombre: 'María García', email: 'maria@email.com', estado: 'Segunda Entrevista' },
+            { id: '3', nombre: 'Carlos López', email: 'carlos@email.com', estado: 'Abierto' }
+        ];
+
+        function searchCandidate() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            if (!query) return;
+
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('errorMessage').classList.remove('active');
+            document.getElementById('resultsSection').classList.remove('active');
+
+            setTimeout(() => {
+                document.getElementById('loading').classList.remove('active');
+                
+                const candidate = candidatesData.find(c => 
+                    c.nombre?.toLowerCase().includes(query) || 
+                    c.email?.toLowerCase().includes(query)
+                );
+
+                if (candidate) {
+                    showResults(candidate);
+                } else {
+                    document.getElementById('errorMessage').classList.add('active');
+                }
+            }, 800);
+        }
+
+        function showResults(candidate) {
+            document.getElementById('candidateName').textContent = candidate.nombre || 'Candidato';
+            document.getElementById('candidateEmail').textContent = candidate.email || '';
+            
+            const estado = candidate.estado || 'Abierto';
+            const normalizedStatus = normalizeStatus(estado);
+            
+            document.getElementById('statusText').textContent = normalizedStatus;
+            
+            generateTimeline(normalizedStatus);
+            
+            document.getElementById('resultsSection').classList.add('active');
+        }
+
+        function normalizeStatus(status) {
+            const lower = status.toLowerCase();
+            return STATUS_MAP[lower] || status;
+        }
+
+        function generateTimeline(currentStatus) {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = '';
+            
+            const currentIndex = PROCESS_STEPS.findIndex(step => step.label === currentStatus);
+            
+            PROCESS_STEPS.forEach((step, index) => {
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                
+                if (index < currentIndex) {
+                    item.classList.add('completed');
+                } else if (index === currentIndex) {
+                    item.classList.add('active');
+                }
+                
+                item.innerHTML = `
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">${step.label}</div>
+                        <div class="timeline-desc">${step.desc}</div>
+                    </div>
+                `;
+                
+                timeline.appendChild(item);
+            });
+        }
+
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchCandidate();
+        });
+    </script>
+</body>
+</html>
