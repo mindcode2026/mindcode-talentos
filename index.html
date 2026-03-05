@@ -413,6 +413,11 @@
     </div>
 
     <script>
+        // CONFIGURACIÓN - ID de tu Google Sheet
+        const SHEET_ID = '19GtP-T_3Vfwk9N3Y26sl1Y-0DbxaisN-5BZMCyf_rdU';
+        const SHEET_NAME = 'base de talento - Personas';
+
+        // Estados del proceso
         const PROCESS_STEPS = [
             { id: 'abierto', label: 'Abierto', desc: 'CV recibido y en revisión inicial' },
             { id: 'primera', label: 'Primera Entrevista', desc: 'Entrevista con RRHH' },
@@ -421,6 +426,7 @@
             { id: 'cerrado', label: 'Proceso Cerrado', desc: 'Proceso finalizado' }
         ];
 
+        // Mapeo de estados
         const STATUS_MAP = {
             'abierto': 'Abierto',
             'primera entrevista': 'Primera Entrevista',
@@ -429,17 +435,47 @@
             'proceso cerrado': 'Proceso Cerrado',
             'contratado': 'Proceso Cerrado',
             'no apto': 'Proceso Cerrado',
-            'no apto': 'Proceso Cerrado',
             'nuevo': 'Abierto',
             'contactado': 'Primera Entrevista'
         };
 
-        // Datos de ejemplo - REEMPLAZAR con tu Google Sheets
-        let candidatesData = [
-            { id: '1', nombre: 'Juan Pérez', email: 'juan@email.com', estado: 'Primera Entrevista' },
-            { id: '2', nombre: 'María García', email: 'maria@email.com', estado: 'Segunda Entrevista' },
-            { id: '3', nombre: 'Carlos López', email: 'carlos@email.com', estado: 'Abierto' }
-        ];
+        let candidatesData = [];
+
+        // Cargar datos desde Google Sheets
+        async function loadData() {
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
+                const response = await fetch(url);
+                const csv = await response.text();
+                candidatesData = parseCSV(csv);
+                console.log('Datos cargados:', candidatesData);
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+                // Datos de ejemplo si falla
+                candidatesData = [
+                    { id: '1', nombre: 'Juan Pérez', email: 'juan@email.com', estado: 'Primera Entrevista' },
+                    { id: '2', nombre: 'María García', email: 'maria@email.com', estado: 'Segunda Entrevista' }
+                ];
+            }
+        }
+
+        function parseCSV(csv) {
+            const lines = csv.split('\n');
+            const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim().toLowerCase());
+            const data = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const values = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || lines[i].split(',');
+                const row = {};
+                headers.forEach((header, index) => {
+                    const value = values[index] ? values[index].replace(/"/g, '').trim() : '';
+                    row[header] = value;
+                });
+                data.push(row);
+            }
+            return data;
+        }
 
         function searchCandidate() {
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -452,10 +488,11 @@
             setTimeout(() => {
                 document.getElementById('loading').classList.remove('active');
                 
-                const candidate = candidatesData.find(c => 
-                    c.nombre?.toLowerCase().includes(query) || 
-                    c.email?.toLowerCase().includes(query)
-                );
+                const candidate = candidatesData.find(c => {
+                    const nombre = (c.nombre || c['nombre completos'] || '').toLowerCase();
+                    const email = (c.email || '').toLowerCase();
+                    return nombre.includes(query) || email.includes(query);
+                });
 
                 if (candidate) {
                     showResults(candidate);
@@ -466,12 +503,14 @@
         }
 
         function showResults(candidate) {
-            document.getElementById('candidateName').textContent = candidate.nombre || 'Candidato';
-            document.getElementById('candidateEmail').textContent = candidate.email || '';
+            const nombre = candidate.nombre || candidate['nombre completos'] || 'Candidato';
+            const email = candidate.email || '';
+            const estadoRaw = candidate.estado || candidate['estado del contacto'] || 'Abierto';
             
-            const estado = candidate.estado || 'Abierto';
-            const normalizedStatus = normalizeStatus(estado);
+            document.getElementById('candidateName').textContent = nombre;
+            document.getElementById('candidateEmail').textContent = email;
             
+            const normalizedStatus = normalizeStatus(estadoRaw);
             document.getElementById('statusText').textContent = normalizedStatus;
             
             generateTimeline(normalizedStatus);
@@ -515,6 +554,9 @@
         document.getElementById('searchInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') searchCandidate();
         });
+
+        // Cargar datos al iniciar
+        loadData();
     </script>
 </body>
 </html>
