@@ -1,260 +1,377 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mind&Code - Estado de Candidatura</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Estado de candidatura | Mind&Code</title>
 
 <style>
-
-body{
-font-family:'Inter',sans-serif;
-background:#f6f6f6;
-margin:0;
-padding:40px;
-color:#222;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.container{
-max-width:700px;
-margin:auto;
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
-header{
-text-align:center;
-margin-bottom:50px;
+.container {
+    width: 100%;
+    max-width: 480px;
 }
 
-.logo{
-max-width:260px;
-margin-bottom:15px;
+.logo {
+    width: 180px;
+    margin: 0 auto 30px;
+    display: block;
+    filter: brightness(0) invert(1);
 }
 
-.searchBox{
-background:white;
-padding:35px;
-border-radius:14px;
-box-shadow:0 8px 25px rgba(0,0,0,0.05);
+.card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
 }
 
-input{
-width:100%;
-padding:16px;
-font-size:16px;
-border-radius:10px;
-border:1px solid #ddd;
-margin-bottom:15px;
+h2 {
+    color: #1a202c;
+    font-size: 24px;
+    margin-bottom: 8px;
+    text-align: center;
 }
 
-button{
-background:#647d00;
-color:white;
-border:none;
-padding:16px 22px;
-border-radius:10px;
-cursor:pointer;
-font-weight:600;
-width:100%;
+.subtitle {
+    color: #718096;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 14px;
 }
 
-button:hover{
-background:#4f6200;
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
 }
 
-.result{
-display:none;
-margin-top:35px;
-background:white;
-padding:35px;
-border-radius:14px;
-box-shadow:0 10px 30px rgba(0,0,0,0.05);
-text-align:center;
+input {
+    width: 100%;
+    padding: 16px 16px 16px 48px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s;
 }
 
-.status{
-margin-top:20px;
-font-size:20px;
-font-weight:600;
-padding:14px 24px;
-border-radius:30px;
-display:inline-block;
-background:#647d00;
-color:white;
+input:focus {
+    outline: none;
+    border-color: #667eea;
 }
 
-.noapto{
-display:none;
-margin-top:20px;
-background:#f3f4f6;
-padding:25px;
-border-radius:10px;
-color:#444;
+.input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
 }
 
-.error{
-display:none;
-margin-top:20px;
-background:#fee2e2;
-color:#991b1b;
-padding:18px;
-border-radius:10px;
-text-align:center;
+button {
+    width: 100%;
+    padding: 16px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
-.loading{
-display:none;
-text-align:center;
-margin-top:20px;
+button:hover:not(:disabled) {
+    background: #5568d3;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
 }
 
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: none;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading .spinner {
+    display: block;
+}
+
+.result {
+    margin-top: 24px;
+    padding: 20px;
+    border-radius: 12px;
+    display: none;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result.show {
+    display: block;
+}
+
+.result.success {
+    background: #f0fff4;
+    border: 1px solid #9ae6b4;
+}
+
+.result.error {
+    background: #fed7d7;
+    border: 1px solid #fc8181;
+}
+
+.result.no-apto {
+    background: #fffaf0;
+    border: 1px solid #fbd38d;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.success .status-badge {
+    background: #c6f6d5;
+    color: #22543d;
+}
+
+.no-apto .status-badge {
+    background: #feebc8;
+    color: #744210;
+}
+
+.error .status-badge {
+    background: #fed7d7;
+    color: #742a2a;
+}
+
+.message {
+    color: #4a5568;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.security-note {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .card {
+        padding: 24px;
+    }
+}
 </style>
 </head>
 
 <body>
 
 <div class="container">
-
-<header>
-
-<img src="logo.png" class="logo">
-
-<p>Consulta el estado de tu candidatura</p>
-
-</header>
-
-<div class="searchBox">
-
-<input id="searchInput" placeholder="Ingresa tu nombre completo o email">
-
-<button onclick="buscar()">Buscar</button>
-
-<div class="loading" id="loading">
-Buscando información...
-</div>
-
-<div class="error" id="error">
-No encontramos tu candidatura. Verifica los datos ingresados.
-</div>
-
-</div>
-
-<div class="result" id="result">
-
-<h2 id="nombre"></h2>
-<p id="correo"></p>
-
-<div class="status" id="estado"></div>
-
-<div class="noapto" id="mensajeNoApto">
-
-<p><strong>Gracias por confiar en nosotros.</strong></p>
-
-<p>
-Actualmente no sigues en el proceso actual de tu candidatura pero
-guardaremos tu información para futuras oportunidades.
-</p>
-
-<p>
-Si no deseas recibir más ofertas escríbenos a
-<b>hi@mindcode.cl</b>
-</p>
-
-</div>
-
-</div>
-
+    <!-- Logo blanco para fondo oscuro -->
+    <img src="TU_LOGO_BLANCO_AQUI" class="logo" alt="Mind&Code">
+    
+    <div class="card">
+        <h2>Consulta tu estado</h2>
+        <p class="subtitle">Ingresa tu email registrado en el proceso</p>
+        
+        <div class="input-group">
+            <span class="input-icon">✉️</span>
+            <input 
+                type="email" 
+                id="emailInput" 
+                placeholder="tu@email.com"
+                autocomplete="email"
+            >
+        </div>
+        
+        <button onclick="buscar()" id="btnBuscar">
+            <span class="spinner"></span>
+            <span class="btn-text">Buscar candidatura</span>
+        </button>
+        
+        <div id="resultado" class="result"></div>
+    </div>
+    
+    <p class="security-note">🔒 Tu información está protegida</p>
 </div>
 
 <script>
-
-const SHEET_URL =
-'https://docs.google.com/spreadsheets/d/e/2PACX-1vQpftgvuMMChINWKWOkpI6ndzRmKsjNnA_Ut7WZa3NhxHNN1Vajj15CALqWh8U5gW_GoUbXI5yFCHFZ/pub?output=csv';
+// ⚠️ IMPORTANTE: Esto es solo para demo. En producción, usa un backend.
+const SHEET_ID = "1D5det2t4rqqM5QqavxibB5W1Sq3iiDMpUVknl7FuKm0";
+const API = `https://opensheet.elk.sh/${SHEET_ID}/0`;
 
 let data = [];
+let isLoading = false;
 
-async function cargarDatos(){
+// Cargar datos al iniciar
+async function cargarDatos() {
+    try {
+        const res = await fetch(API);
+        if (!res.ok) throw new Error('Error de conexión');
+        data = await res.json();
+        console.log("Candidatos cargados:", data.length);
+    } catch (e) {
+        console.error("Error:", e);
+        mostrarError("No pudimos conectar con la base de datos. Intenta más tarde.");
+    }
+}
 
-const response = await fetch(SHEET_URL);
-const csv = await response.text();
+// Validar email
+function validarEmail(email) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
 
-data = csv
-.split('\n')
-.slice(1)
-.map(row => {
+// Escape HTML para prevenir XSS
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
 
-const cols = row.split(',');
+// Mostrar resultado
+function mostrarResultado(html, tipo) {
+    const resultado = document.getElementById('resultado');
+    resultado.innerHTML = html;
+    resultado.className = `result ${tipo} show`;
+}
 
-return{
+function mostrarError(mensaje) {
+    mostrarResultado(`
+        <div class="status-badge">❌ Error</div>
+        <div class="message">${escapeHtml(mensaje)}</div>
+    `, 'error');
+}
 
-nombre:(cols[0]||'').trim().toLowerCase(),
-email:(cols[1]||'').trim().toLowerCase(),
-estado:(cols[2]||'').trim()
+// Buscar candidato
+async function buscar() {
+    if (isLoading) return;
+    
+    const emailInput = document.getElementById('emailInput');
+    const btn = document.getElementById('btnBuscar');
+    const email = emailInput.value.trim().toLowerCase();
+    
+    // Validaciones
+    if (!email) {
+        mostrarError("Por favor ingresa tu email");
+        emailInput.focus();
+        return;
+    }
+    
+    if (!validarEmail(email)) {
+        mostrarError("Ingresa un email válido");
+        emailInput.focus();
+        return;
+    }
+    
+    // Estado de carga
+    isLoading = true;
+    btn.disabled = true;
+    btn.classList.add('loading');
+    
+    // Si los datos no cargaron aún, intentar cargar
+    if (data.length === 0) {
+        await cargarDatos();
+    }
+    
+    // Buscar (simulamos delay para UX)
+    setTimeout(() => {
+        const candidato = data.find(c => 
+            (c.Email || "").toLowerCase() === email
+        );
+        
+        if (!candidato) {
+            mostrarError("No encontramos una candidatura con ese email. Verifica que esté escrito correctamente.");
+        } else {
+            const estado = escapeHtml((candidato["Estado del contacto"] || "Pendiente").trim());
+            const esNoApto = estado.toLowerCase() === "no apto";
+            
+            if (esNoApto) {
+                mostrarResultado(`
+                    <div class="status-badge">📋 ${estado}</div>
+                    <div class="message">
+                        Gracias por tu interés en Mind&Code.<br><br>
+                        En esta ocasión no continuaremos con tu proceso, pero 
+                        guardamos tu perfil para futuras oportunidades que se ajusten 
+                        mejor a tu experiencia.
+                    </div>
+                `, 'no-apto');
+            } else {
+                mostrarResultado(`
+                    <div class="status-badge">✅ ${estado}</div>
+                    <div class="message">
+                        ¡Buenas noticias! Tu proceso sigue activo. 
+                        Pronto nos pondremos en contacto contigo con los siguientes pasos.
+                    </div>
+                `, 'success');
+            }
+        }
+        
+        // Reset estado
+        isLoading = false;
+        btn.disabled = false;
+        btn.classList.remove('loading');
+    }, 600); // Delay artificial para que se sienta "real"
+}
 
-};
-
+// Permitir buscar con Enter
+document.getElementById('emailInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') buscar();
 });
 
-}
-
-async function buscar(){
-
-const query =
-document.getElementById("searchInput")
-.value
-.trim()
-.toLowerCase();
-
-if(!query) return;
-
-document.getElementById("loading").style.display="block";
-document.getElementById("error").style.display="none";
-document.getElementById("result").style.display="none";
-
-await cargarDatos();
-
-const candidato = data.find(c =>
-c.nombre.includes(query) ||
-c.email.includes(query)
-);
-
-document.getElementById("loading").style.display="none";
-
-if(!candidato){
-document.getElementById("error").style.display="block";
-return;
-}
-
-const estadosPermitidos = [
-"contactado",
-"en evaluación",
-"contratado",
-"no disponible",
-"no apto"
-];
-
-if(!estadosPermitidos.includes(candidato.estado.toLowerCase())){
-document.getElementById("error").style.display="block";
-return;
-}
-
-document.getElementById("nombre").innerText=candidato.nombre;
-document.getElementById("correo").innerText=candidato.email;
-document.getElementById("estado").innerText=candidato.estado;
-
-document.getElementById("result").style.display="block";
-
-if(candidato.estado.toLowerCase()=="no apto"){
-document.getElementById("mensajeNoApto").style.display="block";
-document.getElementById("estado").style.display="none";
-}
-
-}
-
+// Cargar datos al inicio
+cargarDatos();
 </script>
 
 </body>
 </html>
-```
