@@ -256,7 +256,8 @@ let isLoading = false;
 // Cargar datos al iniciar
 async function cargarDatos() {
     try {
-        const res = await fetch(API);
+const res = await fetch(API + "?email=" + encodeURIComponent(email));
+const data = await res.json();
         if (!res.ok) throw new Error('Error de conexión');
         data = await res.json();
         console.log("Candidatos cargados:", data.length);
