@@ -1,549 +1,260 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mind&Code - Estado de Candidatura</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%); 
-            color: #1a1a1a; 
-            line-height: 1.6; 
-            min-height: 100vh;
-        }
-        
-        .container { 
-            max-width: 800px; 
-            margin: 0 auto; 
-            padding: 60px 20px; 
-        }
-        
-        .header { 
-            text-align: center; 
-            margin-bottom: 60px; 
-            animation: fadeInDown 0.6s ease;
-        }
-        
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .logo-container {
-            margin-bottom: 20px;
-        }
-        
-        .logo-img {
-            max-width: 280px;
-            height: auto;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
-        }
-        
-        .tagline { 
-            font-size: 1.1rem; 
-            color: #666; 
-            font-weight: 300; 
-        }
-        
-        .search-section { 
-            background: white; 
-            border-radius: 20px; 
-            padding: 40px; 
-            margin-bottom: 40px; 
-            border: 1px solid #e8e8e8;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .search-section:hover {
-            box-shadow: 0 20px 60px rgba(0,0,0,0.06);
-        }
-        
-        .search-title { 
-            font-size: 1.5rem; 
-            font-weight: 600; 
-            margin-bottom: 24px; 
-            text-align: center; 
-            color: #1a1a1a; 
-        }
-        
-        .search-box { 
-            display: flex; 
-            gap: 12px; 
-            margin-bottom: 16px; 
-        }
-        
-        .search-input { 
-            flex: 1; 
-            padding: 18px 24px; 
-            border: 2px solid #e0e0e0; 
-            border-radius: 14px; 
-            font-size: 1rem; 
-            transition: all 0.3s ease; 
-            background: #fafafa;
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .search-input:focus { 
-            outline: none; 
-            border-color: #647d00; 
-            background: white;
-            box-shadow: 0 0 0 4px rgba(100, 125, 0, 0.1);
-        }
-        
-        .search-btn { 
-            padding: 18px 32px; 
-            background: #647d00; 
-            color: white; 
-            border: none; 
-            border-radius: 14px; 
-            font-size: 1rem; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: all 0.3s ease; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px;
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .search-btn:hover { 
-            background: #4a5f00; 
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(100, 125, 0, 0.3);
-        }
-        
-        .search-btn:active {
-            transform: translateY(0);
-        }
-        
-        .search-hint { 
-            text-align: center; 
-            color: #888; 
-            font-size: 0.9rem; 
-            margin-top: 8px;
-        }
-        
-        .results-section { 
-            display: none; 
-            animation: fadeInUp 0.5s ease;
-        }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .results-section.active { 
-            display: block; 
-        }
-        
-        .candidate-card { 
-            background: white; 
-            border-radius: 20px; 
-            padding: 40px; 
-            border: 1px solid #e8e8e8; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-            animation: slideIn 0.5s ease;
-            text-align: center;
-        }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .candidate-header { 
-            margin-bottom: 32px;
-        }
-        
-        .candidate-name { 
-            font-size: 1.75rem; 
-            font-weight: 700; 
-            color: #1a1a1a; 
-            margin-bottom: 8px; 
-        }
-        
-        .candidate-email { 
-            color: #666; 
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .status-display {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            padding: 20px 32px;
-            background: #647d00;
-            color: white;
-            border-radius: 50px;
-            font-size: 1.25rem;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(100, 125, 0, 0.3);
-            margin-top: 8px;
-        }
-        
-        .status-dot { 
-            width: 12px; 
-            height: 12px; 
-            background: white; 
-            border-radius: 50%; 
-            animation: pulse 2s infinite; 
-        }
-        
-        @keyframes pulse { 
-            0%, 100% { opacity: 1; transform: scale(1); } 
-            50% { opacity: 0.6; transform: scale(1.2); } 
-        }
-        
-        /* Mensaje especial para No Apto */
-        .no-apto-message {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border: 2px solid #dee2e6;
-            border-radius: 16px;
-            padding: 32px;
-            margin-top: 24px;
-            text-align: center;
-            animation: fadeIn 0.6s ease;
-        }
-        
-        .no-apto-message .icon {
-            font-size: 3rem;
-            margin-bottom: 16px;
-            display: block;
-        }
-        
-        .no-apto-message h3 {
-            color: #495057;
-            font-size: 1.25rem;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-        
-        .no-apto-message p {
-            color: #6c757d;
-            line-height: 1.6;
-            font-size: 1rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .no-apto-message .email-link {
-            color: #647d00;
-            text-decoration: none;
-            font-weight: 600;
-            border-bottom: 2px solid #647d00;
-            transition: all 0.3s ease;
-        }
-        
-        .no-apto-message .email-link:hover {
-            background: rgba(100, 125, 0, 0.1);
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-        
-        .error-message { 
-            background: #fef2f2; 
-            border: 1px solid #fecaca; 
-            color: #dc2626; 
-            padding: 24px; 
-            border-radius: 16px; 
-            text-align: center; 
-            display: none;
-            animation: shake 0.5s ease;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-        
-        .error-message.active { 
-            display: block; 
-        }
-        
-        .loading { 
-            display: none; 
-            text-align: center; 
-            padding: 40px; 
-        }
-        
-        .loading.active { 
-            display: block; 
-        }
-        
-        .spinner { 
-            width: 50px; 
-            height: 50px; 
-            border: 4px solid #f0f0f0; 
-            border-top-color: #647d00; 
-            border-radius: 50%; 
-            animation: spin 1s linear infinite; 
-            margin: 0 auto 20px; 
-        }
-        
-        @keyframes spin { 
-            to { transform: rotate(360deg); } 
-        }
-        
-        .footer { 
-            text-align: center; 
-            margin-top: 60px; 
-            padding-top: 40px; 
-            border-top: 1px solid #e0e0e0; 
-            color: #888; 
-            font-size: 0.875rem; 
-        }
-        
-        .footer a { 
-            color: #647d00; 
-            text-decoration: none;
-            font-weight: 500;
-            position: relative;
-        }
-        
-        .footer a::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #647d00;
-            transition: width 0.3s ease;
-        }
-        
-        .footer a:hover::after {
-            width: 100%;
-        }
-        
-        @media (max-width: 600px) { 
-            .container { padding: 40px 16px; } 
-            .logo-img { max-width: 200px; }
-            .search-section { padding: 28px; } 
-            .search-box { flex-direction: column; } 
-            .search-btn { width: 100%; justify-content: center; } 
-            .candidate-card { padding: 28px; }
-            .candidate-name { font-size: 1.5rem; }
-            .status-display { font-size: 1.1rem; padding: 16px 24px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mind&Code - Estado de Candidatura</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+font-family:'Inter',sans-serif;
+background:#f6f6f6;
+margin:0;
+padding:40px;
+color:#222;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+}
+
+header{
+text-align:center;
+margin-bottom:50px;
+}
+
+.logo{
+max-width:260px;
+margin-bottom:15px;
+}
+
+.searchBox{
+background:white;
+padding:35px;
+border-radius:14px;
+box-shadow:0 8px 25px rgba(0,0,0,0.05);
+}
+
+input{
+width:100%;
+padding:16px;
+font-size:16px;
+border-radius:10px;
+border:1px solid #ddd;
+margin-bottom:15px;
+}
+
+button{
+background:#647d00;
+color:white;
+border:none;
+padding:16px 22px;
+border-radius:10px;
+cursor:pointer;
+font-weight:600;
+width:100%;
+}
+
+button:hover{
+background:#4f6200;
+}
+
+.result{
+display:none;
+margin-top:35px;
+background:white;
+padding:35px;
+border-radius:14px;
+box-shadow:0 10px 30px rgba(0,0,0,0.05);
+text-align:center;
+}
+
+.status{
+margin-top:20px;
+font-size:20px;
+font-weight:600;
+padding:14px 24px;
+border-radius:30px;
+display:inline-block;
+background:#647d00;
+color:white;
+}
+
+.noapto{
+display:none;
+margin-top:20px;
+background:#f3f4f6;
+padding:25px;
+border-radius:10px;
+color:#444;
+}
+
+.error{
+display:none;
+margin-top:20px;
+background:#fee2e2;
+color:#991b1b;
+padding:18px;
+border-radius:10px;
+text-align:center;
+}
+
+.loading{
+display:none;
+text-align:center;
+margin-top:20px;
+}
+
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <header class="header">
-            <div class="logo-container">
-                <!-- Reemplaza esta URL con la de tu logo -->
-                <img src="https://via.placeholder.com/280x80/647d00/ffffff?text=Mind%26Code" alt="Mind&Code Logo" class="logo-img" id="logoImg">
-            </div>
-            <p class="tagline">Consultora de Talentos Digitales</p>
-        </header>
 
-        <section class="search-section">
-            <h2 class="search-title">Consulta el estado de tu candidatura</h2>
-            <div class="search-box">
-                <input type="text" class="search-input" id="searchInput" placeholder="Ingresa tu nombre completo o email..." autocomplete="off">
-                <button class="search-btn" onclick="searchCandidate()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.35-4.35"></path>
-                    </svg>
-                    Buscar
-                </button>
-            </div>
-            <p class="search-hint">Ingresa el mismo nombre o email que usaste en tu postulación</p>
-        </section>
+<div class="container">
 
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Buscando en nuestra base de datos...</p>
-        </div>
+<header>
 
-        <div class="error-message" id="errorMessage">
-            <strong>No encontramos tu candidatura</strong><br>
-            Verifica que el nombre o email sean correctos o contacta a <a href="mailto:hi@mindcode.cl">hi@mindcode.cl</a>
-        </div>
+<img src="logo.png" class="logo">
 
-        <section class="results-section" id="resultsSection">
-            <div class="candidate-card">
-                <div class="candidate-header">
-                    <h3 class="candidate-name" id="candidateName"></h3>
-                    <p class="candidate-email" id="candidateEmail"></p>
-                </div>
-                
-                <div id="statusContainer">
-                    <div class="status-display" id="statusDisplay">
-                        <span class="status-dot"></span>
-                        <span id="statusText"></span>
-                    </div>
-                </div>
+<p>Consulta el estado de tu candidatura</p>
 
-                <!-- Mensaje especial para No Apto (se muestra/oculta con JS) -->
-                <div class="no-apto-message" id="noAptoMessage" style="display: none;">
-                    <span class="icon">💌</span>
-                    <h3>Gracias por confiar en nosotros</h3>
-                    <p>
-                        Actualmente no sigues en el proceso actual de tu candidatura pero mantendremos tu contacto para futuras ofertas laborales. 
-                        En caso de no querer más ofertas por favor envíanos un correo a 
-                        <a href="mailto:hi@mindcode.cl" class="email-link">hi@mindcode.cl</a>
-                    </p>
-                </div>
-            </div>
-        </section>
+</header>
 
-        <footer class="footer">
-            <p>¿Tienes dudas? Escríbenos a <a href="mailto:hi@mindcode.cl">hi@mindcode.cl</a></p>
-            <p style="margin-top: 12px; opacity: 0.7;">© 2024 Mind&Code. Todos los derechos reservados.</p>
-        </footer>
-    </div>
+<div class="searchBox">
 
-    <script>
-        // URL de tu Google Sheet publicado como CSV
-        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQpftgvuMMChINWKWOkpI6ndzRmKsjNnA_Ut7WZa3NhxHNN1Vajj15CALqWh8U5gW_GoUbXI5yFCHFZ/pub?output=csv';
+<input id="searchInput" placeholder="Ingresa tu nombre completo o email">
 
-        let candidatesData = [];
+<button onclick="buscar()">Buscar</button>
 
-        // Cargar datos al iniciar
-        async function loadData() {
-            try {
-                const response = await fetch(SHEET_URL);
-                const csv = await response.text();
-                candidatesData = parseCSV(csv);
-                console.log('Datos cargados:', candidatesData.length, 'candidatos');
-            } catch (error) {
-                console.error('Error cargando datos:', error);
-            }
-        }
+<div class="loading" id="loading">
+Buscando información...
+</div>
 
-        function parseCSV(csv) {
-            const lines = csv.split('\n').filter(line => line.trim());
-            const headers = parseLine(lines[0]);
-            const data = [];
-            
-            for (let i = 1; i < lines.length; i++) {
-                const values = parseLine(lines[i]);
-                const row = {};
-                headers.forEach((header, index) => {
-                    row[header] = values[index] || '';
-                });
-                data.push(row);
-            }
-            return data;
-        }
+<div class="error" id="error">
+No encontramos tu candidatura. Verifica los datos ingresados.
+</div>
 
-        function parseLine(line) {
-            const result = [];
-            let current = '';
-            let inQuotes = false;
-            
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                const nextChar = line[i + 1];
-                
-                if (char === '"') {
-                    if (inQuotes && nextChar === '"') {
-                        current += '"';
-                        i++;
-                    } else {
-                        inQuotes = !inQuotes;
-                    }
-                } else if (char === ',' && !inQuotes) {
-                    result.push(current.trim());
-                    current = '';
-                } else {
-                    current += char;
-                }
-            }
-            result.push(current.trim());
-            return result;
-        }
+</div>
 
-        async function searchCandidate() {
-            const query = document.getElementById('searchInput').value.trim().toLowerCase();
-            if (!query) {
-                document.getElementById('searchInput').focus();
-                return;
-            }
+<div class="result" id="result">
 
-            // Mostrar loading
-            document.getElementById('loading').classList.add('active');
-            document.getElementById('errorMessage').classList.remove('active');
-            document.getElementById('resultsSection').classList.remove('active');
+<h2 id="nombre"></h2>
+<p id="correo"></p>
 
-            // Recargar datos fresh desde Google Sheets (tiempo real)
-            await loadData();
+<div class="status" id="estado"></div>
 
-            setTimeout(() => {
-                document.getElementById('loading').classList.remove('active');
-                
-                const candidate = candidatesData.find(c => {
-                    const nombre = (c['Nombre completo'] || '').toLowerCase();
-                    const email = (c['Email'] || '').toLowerCase();
-                    return nombre.includes(query) || email.includes(query);
-                });
+<div class="noapto" id="mensajeNoApto">
 
-                if (candidate) {
-                    showResults(candidate);
-                } else {
-                    document.getElementById('errorMessage').classList.add('active');
-                }
-            }, 300);
-        }
+<p><strong>Gracias por confiar en nosotros.</strong></p>
 
-        function showResults(candidate) {
-            const nombre = candidate['Nombre completo'] || 'Candidato';
-            const email = candidate['Email'] || '';
-            const estado = (candidate['Estado del contacto'] || 'Abierto').trim();
-            
-            document.getElementById('candidateName').textContent = nombre;
-            document.getElementById('candidateEmail').textContent = email;
-            
-            // Verificar si es "No Apto"
-            const esNoApto = estado.toLowerCase() === 'no apto';
-            
-            if (esNoApto) {
-                // Ocultar estado normal y mostrar mensaje especial
-                document.getElementById('statusDisplay').style.display = 'none';
-                document.getElementById('noAptoMessage').style.display = 'block';
-            } else {
-                // Mostrar estado normal
-                document.getElementById('statusDisplay').style.display = 'inline-flex';
-                document.getElementById('noAptoMessage').style.display = 'none';
-                document.getElementById('statusText').textContent = estado;
-            }
-            
-            document.getElementById('resultsSection').classList.add('active');
-            
-            // Scroll suave a resultados
-            setTimeout(() => {
-                document.getElementById('resultsSection').scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'nearest' 
-                });
-            }, 100);
-        }
+<p>
+Actualmente no sigues en el proceso actual de tu candidatura pero
+guardaremos tu información para futuras oportunidades.
+</p>
 
-        // Event listeners
-        document.getElementById('searchInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') searchCandidate();
-        });
+<p>
+Si no deseas recibir más ofertas escríbenos a
+<b>hi@mindcode.cl</b>
+</p>
 
-        // Cargar datos al iniciar la página
-        loadData();
+</div>
 
-        // Focus automático al cargar
-        window.addEventListener('load', () => {
-            document.getElementById('searchInput').focus();
-        });
-    </script>
+</div>
+
+</div>
+
+<script>
+
+const SHEET_URL =
+'https://docs.google.com/spreadsheets/d/e/2PACX-1vQpftgvuMMChINWKWOkpI6ndzRmKsjNnA_Ut7WZa3NhxHNN1Vajj15CALqWh8U5gW_GoUbXI5yFCHFZ/pub?output=csv';
+
+let data = [];
+
+async function cargarDatos(){
+
+const response = await fetch(SHEET_URL);
+const csv = await response.text();
+
+data = csv
+.split('\n')
+.slice(1)
+.map(row => {
+
+const cols = row.split(',');
+
+return{
+
+nombre:(cols[0]||'').trim().toLowerCase(),
+email:(cols[1]||'').trim().toLowerCase(),
+estado:(cols[2]||'').trim()
+
+};
+
+});
+
+}
+
+async function buscar(){
+
+const query =
+document.getElementById("searchInput")
+.value
+.trim()
+.toLowerCase();
+
+if(!query) return;
+
+document.getElementById("loading").style.display="block";
+document.getElementById("error").style.display="none";
+document.getElementById("result").style.display="none";
+
+await cargarDatos();
+
+const candidato = data.find(c =>
+c.nombre.includes(query) ||
+c.email.includes(query)
+);
+
+document.getElementById("loading").style.display="none";
+
+if(!candidato){
+document.getElementById("error").style.display="block";
+return;
+}
+
+const estadosPermitidos = [
+"contactado",
+"en evaluación",
+"contratado",
+"no disponible",
+"no apto"
+];
+
+if(!estadosPermitidos.includes(candidato.estado.toLowerCase())){
+document.getElementById("error").style.display="block";
+return;
+}
+
+document.getElementById("nombre").innerText=candidato.nombre;
+document.getElementById("correo").innerText=candidato.email;
+document.getElementById("estado").innerText=candidato.estado;
+
+document.getElementById("result").style.display="block";
+
+if(candidato.estado.toLowerCase()=="no apto"){
+document.getElementById("mensajeNoApto").style.display="block";
+document.getElementById("estado").style.display="none";
+}
+
+}
+
+</script>
+
 </body>
 </html>
+```
