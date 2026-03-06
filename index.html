@@ -6,372 +6,243 @@
 <title>Estado de candidatura | Mind&Code</title>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
-body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+body{
+font-family:Segoe UI,system-ui;
+background:linear-gradient(135deg,#647d00 0%,#ffffff 100%);
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px;
 }
 
-.container {
-    width: 100%;
-    max-width: 480px;
+.container{
+max-width:480px;
+width:100%;
 }
 
-.logo {
-    width: 180px;
-    margin: 0 auto 30px;
-    display: block;
-    filter: brightness(0) invert(1);
+.logo{
+width:180px;
+display:block;
+margin:0 auto 30px;
 }
 
-.card {
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+.card{
+background:white;
+padding:40px;
+border-radius:18px;
+box-shadow:0 20px 60px rgba(0,0,0,0.2);
 }
 
-h2 {
-    color: #1a202c;
-    font-size: 24px;
-    margin-bottom: 8px;
-    text-align: center;
+h2{
+text-align:center;
+margin-bottom:8px;
 }
 
-.subtitle {
-    color: #718096;
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 14px;
+.subtitle{
+text-align:center;
+color:#666;
+margin-bottom:30px;
+font-size:14px;
 }
 
-.input-group {
-    position: relative;
-    margin-bottom: 20px;
+.input-group{
+position:relative;
+margin-bottom:20px;
 }
 
-input {
-    width: 100%;
-    padding: 16px 16px 16px 48px;
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    font-size: 16px;
-    transition: all 0.3s;
+input{
+width:100%;
+padding:16px;
+border:2px solid #e5e5e5;
+border-radius:10px;
+font-size:16px;
 }
 
-input:focus {
-    outline: none;
-    border-color: #667eea;
+input:focus{
+outline:none;
+border-color:#647d00;
 }
 
-.input-icon {
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #a0aec0;
+button{
+width:100%;
+padding:16px;
+background:#647d00;
+color:white;
+border:none;
+border-radius:10px;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+transition:.2s;
 }
 
-button {
-    width: 100%;
-    padding: 16px;
-    background: #667eea;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+button:hover{
+background:#556a00;
 }
 
-button:hover:not(:disabled) {
-    background: #5568d3;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+.result{
+margin-top:25px;
+padding:20px;
+border-radius:10px;
+display:none;
 }
 
-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+.result.show{
+display:block;
 }
 
-.spinner {
-    width: 20px;
-    height: 20px;
-    border: 2px solid transparent;
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    display: none;
+.success{
+background:#e8f5e1;
+border:1px solid #b7d2a3;
 }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
+.error{
+background:#ffe6e6;
+border:1px solid #ffb3b3;
 }
 
-.loading .spinner {
-    display: block;
+.status{
+font-weight:700;
+margin-bottom:8px;
 }
 
-.result {
-    margin-top: 24px;
-    padding: 20px;
-    border-radius: 12px;
-    display: none;
-    animation: slideIn 0.3s ease;
+.message{
+font-size:14px;
+line-height:1.6;
 }
 
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.security{
+text-align:center;
+margin-top:20px;
+font-size:12px;
+color:#555;
 }
 
-.result.show {
-    display: block;
-}
-
-.result.success {
-    background: #f0fff4;
-    border: 1px solid #9ae6b4;
-}
-
-.result.error {
-    background: #fed7d7;
-    border: 1px solid #fc8181;
-}
-
-.result.no-apto {
-    background: #fffaf0;
-    border: 1px solid #fbd38d;
-}
-
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 14px;
-    margin-bottom: 12px;
-}
-
-.success .status-badge {
-    background: #c6f6d5;
-    color: #22543d;
-}
-
-.no-apto .status-badge {
-    background: #feebc8;
-    color: #744210;
-}
-
-.error .status-badge {
-    background: #fed7d7;
-    color: #742a2a;
-}
-
-.message {
-    color: #4a5568;
-    line-height: 1.6;
-    font-size: 14px;
-}
-
-.security-note {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 12px;
-    color: rgba(255,255,255,0.8);
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-    .card {
-        padding: 24px;
-    }
-}
 </style>
-<base target="_blank">
 </head>
 
 <body>
 
 <div class="container">
-    <!-- Logo blanco para fondo oscuro -->
-    <img src="TU_LOGO_BLANCO_AQUI" class="logo" alt="Mind&Code">
-    
-    <div class="card">
-        <h2>Consulta tu estado</h2>
-        <p class="subtitle">Ingresa tu email registrado en el proceso</p>
-        
-        <div class="input-group">
-            <span class="input-icon">✉️</span>
-            <input 
-                type="email" 
-                id="emailInput" 
-                placeholder="tu@email.com"
-                autocomplete="email"
-            >
-        </div>
-        
-        <button onclick="buscar()" id="btnBuscar">
-            <span class="spinner"></span>
-            <span class="btn-text">Buscar candidatura</span>
-        </button>
-        
-        <div id="resultado" class="result"></div>
-    </div>
-    
-    <p class="security-note">🔒 Tu información está protegida</p>
+
+<img src="https://imgur.com/a/ZRpPIPe" class="logo">
+
+<div class="card">
+
+<h2>Consulta tu candidatura</h2>
+<p class="subtitle">Ingresa el email con el que postulaste</p>
+
+<div class="input-group">
+<input
+type="email"
+id="emailInput"
+placeholder="tu@email.com"
+>
+</div>
+
+<button onclick="buscar()">Consultar estado</button>
+
+<div id="resultado" class="result"></div>
+
+</div>
+
+<p class="security">🔒 Tu información está protegida</p>
+
 </div>
 
 <script>
-// ⚠️ IMPORTANTE: Esto es solo para demo. En producción, usa un backend.
-const API = "https://script.google.com/macros/s/AKfycbyoEE7LSu6sVTgQtwtIqCE2tOhKnSTY165IA-emVEJ0WkJxZzZI9yv3qbQ7uZqnMd3T7/exec";
 
-let data = [];
-let isLoading = false;
+const API="https://script.google.com/macros/s/AKfycbyoEE7LSu6sVTgQtwtIqCE2tOhKnSTY165lA-emVEJ0WkJXzZI9yv3qbQ7uZqnMd3T7/exec";
 
-// Cargar datos al iniciar
-async function cargarDatos() {
-    try {
-const res = await fetch(API + "?email=" + encodeURIComponent(email));
-const data = await res.json();
-        if (!res.ok) throw new Error('Error de conexión');
-        data = await res.json();
-        console.log("Candidatos cargados:", data.length);
-    } catch (e) {
-        console.error("Error:", e);
-        mostrarError("No pudimos conectar con la base de datos. Intenta más tarde.");
-    }
+function mostrar(html,tipo){
+
+const div=document.getElementById("resultado");
+
+div.className="result "+tipo+" show";
+div.innerHTML=html;
+
 }
 
-// Validar email
-function validarEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
+function validarEmail(email){
+
+return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
 }
 
-// Escape HTML para prevenir XSS
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+async function buscar(){
+
+const email=document.getElementById("emailInput").value.trim().toLowerCase();
+
+if(!email){
+mostrar("<div class='status'>Error</div><div class='message'>Ingresa tu email</div>","error");
+return;
 }
 
-// Mostrar resultado
-function mostrarResultado(html, tipo) {
-    const resultado = document.getElementById('resultado');
-    resultado.innerHTML = html;
-    resultado.className = `result ${tipo} show`;
+if(!validarEmail(email)){
+mostrar("<div class='status'>Error</div><div class='message'>Email inválido</div>","error");
+return;
 }
 
-function mostrarError(mensaje) {
-    mostrarResultado(`
-        <div class="status-badge">❌ Error</div>
-        <div class="message">${escapeHtml(mensaje)}</div>
-    `, 'error');
+try{
+
+const res=await fetch(API+"?email="+encodeURIComponent(email));
+
+const data=await res.json();
+
+if(!data.encontrado){
+
+mostrar(
+"<div class='status'>No encontrado</div><div class='message'>No encontramos una candidatura con ese email.</div>",
+"error"
+);
+
+return;
+
 }
 
-// Buscar candidato
-async function buscar() {
-    if (isLoading) return;
-    
-    const emailInput = document.getElementById('emailInput');
-    const btn = document.getElementById('btnBuscar');
-    const email = emailInput.value.trim().toLowerCase();
-    
-    // Validaciones
-    if (!email) {
-        mostrarError("Por favor ingresa tu email");
-        emailInput.focus();
-        return;
-    }
-    
-    if (!validarEmail(email)) {
-        mostrarError("Ingresa un email válido");
-        emailInput.focus();
-        return;
-    }
-    
-    // Estado de carga
-    isLoading = true;
-    btn.disabled = true;
-    btn.classList.add('loading');
-    
-    // Si los datos no cargaron aún, intentar cargar
-    if (data.length === 0) {
-        await cargarDatos();
-    }
-    
-    // Buscar (simulamos delay para UX)
-    setTimeout(() => {
-        const candidato = data.find(c => 
-            (c.Email || "").toLowerCase() === email
-        );
-        
-        if (!candidato) {
-            mostrarError("No encontramos una candidatura con ese email. Verifica que esté escrito correctamente.");
-        } else {
-            const estado = escapeHtml((candidato["Estado del contacto"] || "Pendiente").trim());
-            const esNoApto = estado.toLowerCase() === "no apto";
-            
-            if (esNoApto) {
-                mostrarResultado(`
-                    <div class="status-badge">📋 ${estado}</div>
-                    <div class="message">
-                        Gracias por tu interés en Mind&Code.<br><br>
-                        En esta ocasión no continuaremos con tu proceso, pero 
-                        guardamos tu perfil para futuras oportunidades que se ajusten 
-                        mejor a tu experiencia.
-                    </div>
-                `, 'no-apto');
-            } else {
-                mostrarResultado(`
-                    <div class="status-badge">✅ ${estado}</div>
-                    <div class="message">
-                        ¡Buenas noticias! Tu proceso sigue activo. 
-                        Pronto nos pondremos en contacto contigo con los siguientes pasos.
-                    </div>
-                `, 'success');
-            }
-        }
-        
-        // Reset estado
-        isLoading = false;
-        btn.disabled = false;
-        btn.classList.remove('loading');
-    }, 600); // Delay artificial para que se sienta "real"
+const estado=(data.estado||"Pendiente").toLowerCase();
+
+if(estado==="no apto"){
+
+mostrar(
+"<div class='status'>Proceso finalizado</div><div class='message'>Gracias por tu interés en Mind&Code. En esta ocasión no continuaremos con tu proceso, pero guardaremos tu perfil para futuras oportunidades.</div>",
+"error"
+);
+
+}else{
+
+mostrar(
+"<div class='status'>"+data.estado+"</div><div class='message'>Tu proceso sigue activo. Pronto te contactaremos con los siguientes pasos.</div>",
+"success"
+);
+
 }
 
-// Permitir buscar con Enter
-document.getElementById('emailInput').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') buscar();
+}catch(e){
+
+mostrar(
+"<div class='status'>Error</div><div class='message'>No pudimos consultar el estado. Intenta nuevamente.</div>",
+"error"
+);
+
+}
+
+}
+
+document.getElementById("emailInput").addEventListener("keypress",function(e){
+
+if(e.key==="Enter")buscar();
+
 });
 
-// Cargar datos al inicio
-cargarDatos();
 </script>
 
 </body>
