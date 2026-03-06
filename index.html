@@ -213,7 +213,7 @@ const estado=(data.estado||"Pendiente").toLowerCase();
 if(estado==="contratado"){
 
 mostrar(
-"<div class='status'>Resultado del proceso</div><div class='message'>Felicitaciones por su resultado en su proceso de postulación. Gracias por confiar en Mind&Code.</div>",
+"<div class='status'>Resultado del proceso</div><div class='message'>Felicitaciones por el resultado obtenido en su proceso de postulación. Gracias por confiar en Mind&Code 💚</div>",
 "success"
 );
 
@@ -221,6 +221,13 @@ mostrar(
 
 mostrar(
 "<div class='status'>Proceso finalizado</div><div class='message'>Gracias por tu confianza en Mind&Code. En esta ocasión no continuaremos con tu proceso, pero guardaremos tu perfil para futuras oportunidades. Si no deseas recibir más ofertas laborales por favor envía un correo a hi@mindcode.cl 💚</div>",
+"error"
+);
+
+}else if(estado==="no disponible"){
+
+mostrar(
+"<div class='status'>Proceso cerrado</div><div class='message'>Proceso cerrado. Si no deseas recibir más ofertas laborales por favor envía un correo a hi@mindcode.cl 💚</div>",
 "error"
 );
 
